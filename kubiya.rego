@@ -2,24 +2,29 @@ package kubiya.tool_manager
 
 default allow = false
 
+
 allow {
     group = input.user.groups[_]
-    group == "costa - typo"
+    group == "Kubiya R&D"
+    tool != "cluster_health"
 }
 
 allow {
     group = input.user.groups[_]
-    group == "Kubiya R&D - typo"
-}
-
-allow {
-    group = input.user.groups[_]
-    group == "Administrators - typo"
+    group == "Administrators"
+    tool != "cluster_health"    
 }
 
 allow {
     tool = input.tool.name
     tool == "request_tool_access"
+}
+
+allow {
+    tool = input.tool.name
+    email = input.user.email
+    tool == "cluster_health"
+    email == "amit@kubiya.ai"
 }
 
 allow {
