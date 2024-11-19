@@ -1,48 +1,55 @@
 package kubiya.tool_manager
 
+# Default deny all access
 default allow = false
 
-
+# Allow Kubiya R&D team access to all tools except cluster_health
 allow {
-    group = input.user.groups[_]
+    group := input.user.groups[_]
     group == "Kubiya R&D"
+    tool := input.tool.name
     tool != "cluster_health"
 }
 
+# Allow Administrators access to all tools except cluster_health
 allow {
-    group = input.user.groups[_]
+    group := input.user.groups[_]
     group == "Administrators"
-    tool != "cluster_health"    
+    tool := input.tool.name
+    tool != "cluster_health"
 }
 
+# Always allow access to request_tool_access
 allow {
-    tool = input.tool.name
-    tool == "request_tool_access"
+    input.tool.name == "request_tool_access"
 }
 
+# Special access for cluster_health tool
 allow {
-    tool = input.tool.name
-    email = input.user.email
-    tool == "cluster_health"
-    email == "amit@kubiya.ai"
+    input.tool.name == "cluster_health"
+    input.user.email == "amit@kubiya.ai"
 }
 
+# PDB checker access for Kubiya R&D team
 allow {
-    tool = input.tool.name
-	group = input.user.groups[_]
-    namespace = input.tool.parameters.namespace
+    input.tool.name == "pod_disruption_budget_checker"
+    group := input.user.groups[_]
+    namespace := input.tool.parameters.namespace
 
-    namespace == "all - typo"
-    group == "Kubiya R&D - typo"
-    tool == "pod_disruption_budget_checker"
+    # Fixed typos in group name and namespace
+    namespace == "all"
+    group == "Kubiya R&D"
 }
 
+# PDB checker access for specific user
 allow {
-    tool = input.tool.name
-    email = input.user.email
-    namespace = input.tool.parameters.namespace
+    input.tool.name == "pod_disruption_budget_checker"
+    input.user.email == "kris.talajic@kubiya.ai"
+    input.tool.parameters.namespace == "all"
+}
 
-    namespace == "all - typo"
-    email == "kris.talajic@kubiya.ai - typo"
-    tool == "pod_disruption_budget_checker - typo"
+# Helper function to check if tool is restricted
+is_restricted(tool) {
+    restricted_tools := {"cluster_health"}
+    restricted_tools[tool]
 }
