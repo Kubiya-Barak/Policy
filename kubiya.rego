@@ -19,6 +19,11 @@ allow {
 
 allow {
     tool = input.tool.name
+    tool == "request tool access"
+}
+
+allow {
+    tool = input.tool.name
 	group = input.user.groups[_]
     namespace = input.tool.parameters.namespace
 
