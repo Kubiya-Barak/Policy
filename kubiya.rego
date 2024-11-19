@@ -19,7 +19,7 @@ allow {
 
 allow {
     tool = input.tool.name
-    tool == "request tool access"
+    tool == "request_tool_access"
 }
 
 allow {
