@@ -8,7 +8,7 @@ allow {
     group := input.user.groups[_]
     group == "Kubiya R&D"
     tool := input.tool.name
-    tool != "cluster_health"
+    tool != "jit_se_access"
 }
 
 # Allow Administrators access to all tools except cluster_health
@@ -16,7 +16,7 @@ allow {
     group := input.user.groups[_]
     group == "Administrators"
     tool := input.tool.name
-    tool != "cluster_health"
+    tool != "jit_se_access"
 }
 
 # Always allow access to request_tool_access
@@ -26,7 +26,7 @@ allow {
 
 # Special access for cluster_health tool
 allow {
-    input.tool.name == "cluster_health"
+    input.tool.name == "jit_se_access"
     input.user.email == "amit@kubiya.ai"
 }
 
