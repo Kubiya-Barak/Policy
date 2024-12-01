@@ -24,7 +24,7 @@ restricted_tool = "jit_session_grant_database_access_to_staging"
 # Allow Administrators to run everything except the restricted tool
 allow {
    group := input.user.groups[_]
-   group == "Admin"
+   group == "Administrators"
    input.tool.name != restricted_tool
 }
 
