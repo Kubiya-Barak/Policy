@@ -5,17 +5,17 @@ default allow = false
 
 # List of admin-only Okta functions
 admin_only_functions = {
-   "functions.get_user",
-   "functions.search_users",
-   "functions.list_users",
+   "get_user",
+   "search_users",
+   "list_users",
    "list_groups",
-   "functions.create_group",
-   "functions.update_group",
-   "functions.delete_group",
-   "functions.get_group",
-   "functions.list_members",
-   "functions.add_member",
-   "functions.remove_member"
+   "create_group",
+   "update_group",
+   "delete_group",
+   "get_group",
+   "list_members",
+   "add_member",
+   "remove_member"
 }
 
 # Nobody can run this tool except with special permission
