@@ -8,7 +8,7 @@ admin_only_functions = {
    "functions.get_user",
    "functions.search_users",
    "functions.list_users",
-   "functions.list_groups",
+   "list_groups",
    "functions.create_group",
    "functions.update_group",
    "functions.delete_group",
