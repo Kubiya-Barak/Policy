@@ -34,6 +34,5 @@ allow {
 
 # Allow everyone to run everything except admin functions and restricted tool
 allow {
-   input.tool.name != restricted_tool
    not restricted_tools[input.tool.name] && not admin_only_functions[input.tool.name]
 }
