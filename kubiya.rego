@@ -28,12 +28,7 @@ restricted_tools = {
 # Allow Administrators to run everything except the restricted tool
 allow {
    group := input.user.groups[_].name
-   group == "Administrator"
+   group == "Administrators"
    not restricted_tools[input.tool.name]
 }
 
-# Allow everyone to run everything except admin functions and restricted tool
-allow {
-   not restricted_tools[input.tool.name]
-   not admin_only_functions[input.tool.name]
-}
