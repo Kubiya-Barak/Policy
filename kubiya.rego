@@ -5,6 +5,13 @@ default allow = false
 
 # List of admin-only Okta functions
 admin_only_functions = {
+   view_user_requests,
+   list_active_access_requests,
+   search_access_requests,
+   approve_tool_access_request
+}
+
+restricted_tools = {
    "get_user",
    "search_users",
    "list_users",
@@ -18,18 +25,15 @@ admin_only_functions = {
    "remove_member"
 }
 
-# Nobody can run this tool except with special permission
-restricted_tool = "jit_session_grant_database_access_to_staging"
-
 # Allow Administrators to run everything except the restricted tool
 allow {
    group := input.user.groups[_].name
    group == "Administrators"
-   input.tool.name != restricted_tool
+   not restricted_tools[input.tool.name]
 }
 
 # Allow everyone to run everything except admin functions and restricted tool
 allow {
    input.tool.name != restricted_tool
-   not admin_only_functions[input.tool.name]
+   not restricted_tools[input.tool.name] && not admin_only_functions[input.tool.name]
 }
