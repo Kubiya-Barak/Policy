@@ -1,43 +1,13 @@
 package kubiya.tool_manager
 
 # Default deny all access
-
 default allow = false
 
-# Define prefixes for admin-only and restricted functions
-admin_only_prefixes = {
-   "s3_revoke_",
-   "jit_session_revoke_"
-}
-
-restricted_prefixes = {
-   "s3_grant_",
-   "jit_session_grant_"
-}
-
-# Non-dynamic admin functions
-admin_only_functions = {
-   "list_active_access_requests", 
-   "search_access_requests", 
-   "approve_tool_access_request"
-}
-
-# Check if tool name starts with any restricted prefix
-
-is_restricted_tool {
-   some prefix in restricted_prefixes
-   startswith(input.tool.name, prefix)
-}
-
-# Check if tool name starts with any admin-only prefix
-
-is_admin_tool {
-   some prefix in admin_only_prefixes
-   startswith(input.tool.name, prefix)
-}
-
-# List of restricted tools (nobody can run these)
-restricted_tools = {
+# List of admin-only functions and tools
+admin_tools = {
+    "list_active_access_requests", 
+    "search_access_requests", 
+    "approve_tool_access_request",
     "get_user",
     "search_users",
     "list_users",
@@ -51,25 +21,37 @@ restricted_tools = {
     "remove_member"
 }
 
-# Allow Administrators to run admin-only tools
-allow {
-   group := input.user.groups[_].name
-   group == "test"
-   is_admin_tool
+# Nobody (including admins) can run these
+restricted_prefixes = {
+    "s3_grant_",
+    "jit_session_grant_"
 }
 
-# Allow Administrators to run specific admin functions
-
-allow {
-   group := input.user.groups[_].name
-   group == "test"
-   admin_only_functions[input.tool.name]
+# Only admins can run these
+admin_prefixes = {
+    "s3_revoke_",
+    "jit_session_revoke_"
 }
 
-# Allow everyone to run everything except admin functions and restricted tools
+# Allow Administrators to run admin tools
 allow {
-   not is_restricted_tool
-   not is_admin_tool
-   not admin_only_functions[input.tool.name]
-   not restricted_tools[input.tool.name]
+    group := input.user.groups[_].name
+    group == "Admin"
+    admin_tools[input.tool.name]
+}
+
+# Allow Administrators to run revoke tools (s3_revoke_*, jit_session_revoke_*)
+allow {
+    group := input.user.groups[_].name
+    group == "Admin"
+    startswith(input.tool.name, admin_prefixes[_])
+}
+
+# Allow everyone to run everything except:
+# - admin tools
+# - grant/revoke prefixed tools
+allow {
+    not admin_tools[input.tool.name]
+    not startswith(input.tool.name, restricted_prefixes[_])
+    not startswith(input.tool.name, admin_prefixes[_])
 }
