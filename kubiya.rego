@@ -54,7 +54,7 @@ restricted_tools = {
 # Allow Administrators to run admin-only tools
 allow {
    group := input.user.groups[_].name
-   group == "Administrators"
+   group == "test"
    is_admin_tool
 }
 
@@ -62,7 +62,7 @@ allow {
 
 allow {
    group := input.user.groups[_].name
-   group == "Administrators"
+   group == "test"
    admin_only_functions[input.tool.name]
 }
 
