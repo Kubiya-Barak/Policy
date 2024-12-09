@@ -10,27 +10,22 @@ admin_tools = {
     "approve_tool_access_request",
     "get_user",
     "search_users",
-    "list_users",
-    "list_groups",
     "create_group",
     "update_group",
     "delete_group",
     "get_group",
     "list_members",
     "add_member",
-    "remove_member"
+    "remove_member",
+    "jit_session_revoke_database_access_to_staging",
+    "s3_revoke_data_lake_read"
 }
 
-# Nobody (including admins) can run these
-restricted_prefixes = {
-    "s3_grant_",
-    "jit_session_grant_"
-}
-
-# Only admins can run these
-admin_prefixes = {
-    "s3_revoke_",
-    "jit_session_revoke_"
+restricted_tools = {
+    "list_users",
+    "list_groups",
+    "jit_session_grant_database_access_to_staging",
+    "s3_grant_data_lake_read"
 }
 
 # Allow Administrators to run admin tools
@@ -44,7 +39,7 @@ allow {
 allow {
     group := input.user.groups[_].name
     group == "Admin"
-    startswith(input.tool.name, admin_prefixes[_])
+    not restricted_tools[input.tool.name]
 }
 
 # Allow everyone to run everything except:
@@ -52,6 +47,5 @@ allow {
 # - grant/revoke prefixed tools
 allow {
     not admin_tools[input.tool.name]
-    not startswith(input.tool.name, restricted_prefixes[_])
-    not startswith(input.tool.name, admin_prefixes[_])
+    not restricted_tools[input.tool.name]
 }
