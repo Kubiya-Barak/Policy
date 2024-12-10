@@ -1,5 +1,5 @@
 # Default deny all access
-default allow = true
+default allow = false
 
 # List of admin-only functions (functions that ONLY admin can run)
 admin_only_functions = {
@@ -17,11 +17,4 @@ restricted_tools = {
 allow {
     group := input.user.groups[_].name
     group == "approvers"
-    admin_only_functions[input.tool.name]
-}
-
-# Allow everyone to run everything except admin functions and restricted tools
-allow {
-    not restricted_tools[input.tool.name]
-    not admin_only_functions[input.tool.name]
 }
