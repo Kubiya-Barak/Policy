@@ -1,5 +1,5 @@
 # Default deny all access
-default allow = true
+default allow = false
 
 # List of admin-only functions (functions that ONLY admin can run)
 admin_only_functions = {
